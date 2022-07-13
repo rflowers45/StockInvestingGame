@@ -36,7 +36,7 @@ namespace StockInvestingGame.Pages
                 //This fills the object with values
                 dailyPrices.PrintDump();
 
-                var testDate = new DateTime(2022, 7, 6); //This is a random date I chose for testing
+                var testDate = GetRandomDate();
                 var day = dailyPrices.Where(u => u.Timestamp.Year == testDate.Year && u.Timestamp.Month == testDate.Month && u.Timestamp.Day == testDate.Day); //This grabs the objects day
                 var dayPrice = day.Max(u => u.Close);//This gets the price
                 price = dayPrice; //Setting the global price to = the day price
@@ -183,11 +183,17 @@ namespace StockInvestingGame.Pages
         //********************HELPER FUNCTIONS********************
 
         //We can use this funciton to help with randomizing the date. Need to code the logic
-        public int DateRandomizer ()
+        private DateTime GetRandomDate()
         {
-            return 1;
+            Random rnd = new Random();
+            DateTime datetoday = DateTime.Now;
+
+            int rndYear = 2022;//rnd.Next(2000, datetoday.Year);
+            int rndMonth = rnd.Next(4, 6);//rnd.Next(1,12);
+            int rndDay = rnd.Next(1, 31);//rnd,Next(1,31);
+
+            DateTime generateDate = new DateTime(rndYear, rndMonth, rndDay);
+            return generateDate;
         }
-
-
     }
 }
