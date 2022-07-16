@@ -93,7 +93,7 @@ namespace StockInvestingGame.Pages
                 price = Convert.ToDecimal(sSessionPrice);
                 currentDayNum++;
                 HttpContext.Session.SetInt32("currentDay", currentDayNum);
-                while (vDayCounter <= 7)
+                while (vDayCounter < 7)
                 {
                     decimal totalBuyingPrice = price * value;
                     decimal total = balance - totalBuyingPrice;
@@ -143,7 +143,7 @@ namespace StockInvestingGame.Pages
                 price = Convert.ToDecimal(sSessionPrice);
                 currentDayNum++;
                 HttpContext.Session.SetInt32("currentDay", currentDayNum);
-                while (iDayCounter <= 7)
+                while (iDayCounter < 7)
                 {
                     decimal totalSellingPrice = price * value;
                     decimal total = balance + totalSellingPrice;
@@ -180,15 +180,26 @@ namespace StockInvestingGame.Pages
         {
             try
             {
-
-                var testDate = new DateTime(2022, 7, 6);
+                string sSessionPrice = HttpContext.Session.GetString("price"); //Getting session price
+                string sSessionBalance = HttpContext.Session.GetString("balance"); //Getting session balance
+                string sDate = HttpContext.Session.GetString("currentDate");
+                var vDayCounter = HttpContext.Session.GetInt32("dayCounter");
+                int iDayCounter = vDayCounter.Value;
                 var iCurrentDay = HttpContext.Session.GetInt32("currentDay");
                 int currentDayNum = iCurrentDay.Value;
+                var iSessionShares = HttpContext.Session.GetInt32("shares"); //Getting sessions shares
+                int ownedShares = iSessionShares.Value; //Have to convert nullable-int to int
+                balance = Convert.ToDecimal(sSessionBalance);
+                price = Convert.ToDecimal(sSessionPrice);
                 currentDayNum++;
                 HttpContext.Session.SetInt32("currentDay", currentDayNum);
-                while ((iCurrentDay - testDate.Day) <= 7)
+                while (iDayCounter < 7)
                 {
-                    return new JsonResult(" Day: " + iCurrentDay);
+                    iDayCounter++;
+                    HttpContext.Session.SetInt32("dayCounter", iDayCounter);
+                    HttpContext.Session.SetInt32("shares", ownedShares); //Setting session shares held
+                    HttpContext.Session.SetString("balance", balance.ToString()); //Setting session balance
+                    return new JsonResult("Current Balance: $" + balance + "<br> Shares Held: " + ownedShares + "<br> Current Day: " + iDayCounter);
                 }
                 return new JsonResult(" ");
 
@@ -207,16 +218,23 @@ namespace StockInvestingGame.Pages
         {
             try
             {
-
+                string sSessionPrice = HttpContext.Session.GetString("price"); //Getting session price
+                string sSessionBalance = HttpContext.Session.GetString("balance"); //Getting session balance
+                string sDate = HttpContext.Session.GetString("currentDate");
+                var vDayCounter = HttpContext.Session.GetInt32("dayCounter");
+                int iDayCounter = vDayCounter.Value;
                 var iCurrentDay = HttpContext.Session.GetInt32("currentDay");
                 int currentDayNum = iCurrentDay.Value;
+                var iSessionShares = HttpContext.Session.GetInt32("shares"); //Getting sessions shares
+                int ownedShares = iSessionShares.Value; //Have to convert nullable-int to int
+                balance = Convert.ToDecimal(sSessionBalance);
+                price = Convert.ToDecimal(sSessionPrice);
                 currentDayNum++;
                 HttpContext.Session.SetInt32("currentDay", currentDayNum);
-                while (iCurrentDay <= 7)
-                {
-                    return new JsonResult(" Day: " + iCurrentDay);
-                }
-                return new JsonResult(" ");
+                HttpContext.Session.SetInt32("shares", ownedShares); //Setting session shares held
+                HttpContext.Session.SetString("balance", balance.ToString()); //Setting session balance
+                return new JsonResult("Final Balance: $" + balance + "<br> Shares Held: " + ownedShares);
+             
 
 
             }
