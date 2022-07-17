@@ -229,11 +229,13 @@ namespace StockInvestingGame.Pages
                 int ownedShares = iSessionShares.Value; //Have to convert nullable-int to int
                 balance = Convert.ToDecimal(sSessionBalance);
                 price = Convert.ToDecimal(sSessionPrice);
+                decimal totalSellingPrice = price * ownedShares;
+                decimal total = balance + totalSellingPrice;
                 currentDayNum++;
                 HttpContext.Session.SetInt32("currentDay", currentDayNum);
                 HttpContext.Session.SetInt32("shares", ownedShares); //Setting session shares held
-                HttpContext.Session.SetString("balance", balance.ToString()); //Setting session balance
-                return new JsonResult("Final Balance: $" + balance + "<br> Shares Held: " + ownedShares);
+                HttpContext.Session.SetString("balance", total.ToString()); //Setting session balance
+                return new JsonResult("Final Balance: $" + total);
              
 
 
