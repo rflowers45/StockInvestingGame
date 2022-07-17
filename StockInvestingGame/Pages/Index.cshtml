@@ -26,17 +26,28 @@
         <input type="button" class="game-button" role="button" id="btnBuy" value="Buy" />
         <input type="button" class="game-button" role="button" id="btnSell" value="Sell" />
         <br />
-        <p>Enter number of shares to buy/sell or drag the slider below</p>
-        <input id="shareCount" type="text" value="" />
-        <div id="slider"></div>
-        <style>
-            #slider {
-                width: 250px;
-                margin: 0 auto;
-            }
+        <div class="container">
+            <p>Enter number of shares to buy/sell or drag the slider below</p>
+            <div class="row">
+            <div class="col">
+                <input id="shareCount" type="text" value="" />
+            </div>
+            <div id="slider" class="col"></div>
+            <style>
+                #slider {
+                    width: 250px;
+                    margin: 0 auto;
+                }
 
-            #slider .ui-slider-handle { background: #13aa52; }
-        </style>
+                    #slider .ui-slider-handle {
+                        background: #13aa52;
+                    }
+            </style>
+            <div class="col">
+
+            </div>
+            </div>
+        </div>
         <br />
         <input type="button" class="game-button" role="button" id="btnHold" value="Hold" />
         <br />
