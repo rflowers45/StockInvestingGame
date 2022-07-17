@@ -249,9 +249,10 @@ namespace StockInvestingGame.Pages
         }
 
         //Not in use currently. Possibly used later on?
-        public void OnGet()
+        public IActionResult OnPostRunChart(int value)
         {
-
+            string test = "THIS IS A TEST";
+            return new JsonResult(test);
         }
 
         //********************CLASSES********************

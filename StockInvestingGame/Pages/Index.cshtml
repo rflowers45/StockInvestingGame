@@ -13,8 +13,10 @@
     <form id="form1" runat="server">
         <p>You are given $10,000 to invest in the stock market. You are placed on a random day, at least six months in the past. You are able to buy, sell, or hold for a total of 7 days. Good luck!</p>
         <br />
-        <div class="text-center" id="result">Enter Ticker Symbol Below</div>
-        <div class="text-center" id="balanceResults"></div>
+        <div class="results-container">
+            <div class="text-center" id="result">Enter Ticker Symbol Below</div>
+            <div class="text-center" id="balanceResults"></div>
+        </div>
         <br />
 
         <input id="tickerSymbol" type="text" value="E.G. AAPL" />
@@ -35,25 +37,43 @@
                 margin: 0 auto;
             }
 
-            #slider .ui-slider-handle { background: #13aa52; }
+                #slider .ui-slider-handle {
+                    background: #13aa52;
+                }
         </style>
         <br />
+        <p>Adjust amount of money invested</p>
+        <div id="doughnut"></div>
+        <style>
+            #doughnut {
+                width: 250px;
+                margin: 0 auto;
+            }
+
+                #doughnut .rs-range-color {
+                    background: #4df794;
+                }
+        </style>
+
+        <input type="hidden" id="balanceHidden" />
+        <input type="hidden" id="priceHidden" />
         <input type="button" class="game-button" role="button" id="btnHold" value="Hold" />
-         <input type="button" class="game-button" role="button" id="btnQuit" value="Quit" />
+        <input type="button" class="game-button" role="button" id="btnQuit" value="Quit" />
         <br />
 
 
     </form>
-
-
-
-
 </div>
 
 @section Scripts
     {
     <!--DISPLAYING STOCK PRICE-->
+    <script src="//cdn.amcharts.com/lib/4/core.js"></script>
+    <script src="//cdn.amcharts.com/lib/4/charts.js"></script>
+    <script src="//cdn.amcharts.com/lib/4/themes/animated.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.css" rel="stylesheet" />
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <script type="text/javascript">
         $("#btnGetStocks").click(function() {
@@ -70,30 +90,48 @@
                 },
                 success: function(message) {
                     document.getElementById("result").innerHTML = message;
+
+                    document.getElementById("balanceHidden").setAttribute("balanceAttr", 50)
                 }
             });
+
+
         });
     </script>
 
-    <!--SLIDER-->
+    <!--SLIDER LINKING-->
     <script type="text/javascript">
         $(function() {
+             //This is just a test, simulating the day's stock price
             $("#slider").slider({
                 min: 1, max: 99, step: 1, value: 0,
                 slide: function(event, ui) {
-                    $("#shareCount").val(ui.value);
+                    var price = (ui.value * 100);
+                    $("#shareCount").val(ui.value); //Linking text field with slider
+                    $("#doughnut").roundSlider("setValue", price); //Linking chart with slider
                 }
             });
             var initialValue = $("#slider").slider("option", "value");
             $("#shareCount").val(initialValue);
+            //Linking slider & chart with text field
             $("#shareCount").change(function() {
+                
                 var oldVal = $("#slider").slider("option", "value");
                 var newVal = $(this).val();
+                var price = (newVal * 100);
                 if (isNaN(newVal) || newVal < 1 || newVal > 100) {
                     $("#shareCount").val(oldVal);
                 } else {
-                    $("#slider").slider("option", "value", newVal);
+                    $("#slider").slider("option", "value", newVal); 
+                    $("#doughnut").roundSlider("setValue", price); //Linking chart with slider
                 }
+            });
+            $("#doughnut").change(function(e) {
+                var shares = (e.value/100)
+                    $("#slider").slider("option", "value", shares); 
+                    $("#shareCount").val(shares); //Linking chart with slider
+                
+                
             });
         });
     </script>
@@ -162,34 +200,7 @@
             });
         });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!--POSSIBLE CHART, UNUSED FOR NOW-->
-    <script>
-        const labels = [
-            'Balance',
-            'Shares',
-        ];
 
-        const data = {
-            labels: labels,
-            datasets: [{
-                label: 'Number of shares',
-                backgroundColor: 'rgb(0, 165, 255)',
-                data: [0, 10, 5, 2, 20, 30, 45],
-            }]
-        };
-
-        const config = {
-            type: 'doughnut',
-            data: data,
-        };
-    </script>
-    <script>
-        const myChart = new Chart(
-            document.getElementById('myChart'),
-            config
-        );
-    </script>
     <!--QUIT BUTTON-->
     <script type="text/javascript">
 
@@ -211,4 +222,183 @@
             });
         });
     </script>
+    <!--CHART-->
+    <script type="text/javascript">
+
+        $("#doughnut").roundSlider({
+            tooltipFormat: "DoughnutVal2",
+            sliderType: "min-range",
+            handleSize: "+1",
+            handleSize: "24,12",
+            handleShape: "square",
+            radius: 100,
+            width: 15,
+            max: 10000,
+            value: 100,
+            step: 100
+        });
+
+        function DoughnutVal2(args) {
+            return "$" + args.value;
+        }
+    </script>
+   @* <script>
+        am4core.useTheme(am4themes_animated);
+
+        var chart = am4core.create("chartdiv", am4charts.XYChart);
+        chart.hiddenState.properties.opacity = 0; // this makes initial fade in effect
+
+        chart.data = [
+            {
+                account: "Shares to purchase",
+                money: 0
+            },
+        ];
+
+        chart.padding(40, 40, 0, 0);
+        chart.maskBullets = false; // allow bullets to go out of plot area
+
+        var text = chart.plotContainer.createChild(am4core.Label);
+        text.text = "";
+        text.y = 5;
+        text.x = am4core.percent(100);
+        text.horizontalCenter = "right";
+        text.zIndex = 100;
+        text.fillOpacity = 0.7;
+
+        // category axis
+        var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+        categoryAxis.dataFields.category = "account";
+        categoryAxis.renderer.grid.template.disabled = true;
+        categoryAxis.renderer.minGridDistance = 60;
+
+
+        // value axis
+        var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        // we set fixed min/max and strictMinMax to true, as otherwise value axis will adjust min/max while dragging and it won't look smooth
+        valueAxis.strictMinMax = true;
+        valueAxis.min = 0;
+        valueAxis.max = 100;
+        valueAxis.renderer.minWidth = 40;
+
+        // series
+        var series = chart.series.push(new am4charts.ColumnSeries());
+        series.dataFields.categoryX = "account";
+        series.dataFields.valueY = "money";
+        series.tooltip.pointerOrientation = "vertical";
+        series.tooltip.dy = -8;
+        series.sequencedInterpolation = true;
+        series.defaultState.interpolationDuration = 1500;
+        series.columns.template.strokeOpacity = 0;
+
+        // label bullet
+        var labelBullet = new am4charts.LabelBullet();
+        series.bullets.push(labelBullet);
+        labelBullet.label.text = "{valueY.value.formatNumber('#.')}";
+        labelBullet.strokeOpacity = 0;
+        labelBullet.stroke = am4core.color("#dadada");
+        labelBullet.dy = -20;
+
+
+        // series bullet
+        var bullet = series.bullets.create();
+        bullet.stroke = am4core.color("#ffffff");
+        bullet.strokeWidth = 3;
+        bullet.opacity = 1; // initially invisible
+        bullet.defaultState.properties.opacity = 1;
+        // resize cursor when over
+        bullet.cursorOverStyle = am4core.MouseCursorStyle.verticalResize;
+        bullet.draggable = true;
+
+        // create hover state
+        var hoverState = bullet.states.create("hover");
+        hoverState.properties.opacity = 1; // visible when hovered
+
+        // add circle sprite to bullet
+        var circle = bullet.createChild(am4core.Circle);
+        circle.radius = 8;
+
+        // while dragging
+        bullet.events.on("drag", event => {
+            handleDrag(event);
+        });
+
+        bullet.events.on("dragstop", event => {
+            handleDrag(event);
+            var dataItem = event.target.dataItem;
+            dataItem.column.isHover = false;
+            event.target.isHover = false;
+        });
+
+        function handleDrag(event) {
+            var dataItem = event.target.dataItem;
+            // convert coordinate to value
+            var value = valueAxis.yToValue(event.target.pixelY);
+            // set new value
+            dataItem.valueY = value;
+            // make column hover
+            dataItem.column.isHover = true;
+            // hide tooltip not to interrupt
+            dataItem.column.hideTooltip(0);
+            // make bullet hovered (as it might hide if mouse moves away)
+            event.target.isHover = true;
+        }
+
+        // column template
+        var columnTemplate = series.columns.template;
+        columnTemplate.column.cornerRadiusTopLeft = 8;
+        columnTemplate.column.cornerRadiusTopRight = 8;
+        columnTemplate.column.fillOpacity = 0.8;
+        columnTemplate.tooltipText = "drag me";
+        columnTemplate.tooltipY = 0; // otherwise will point to middle of the column
+
+        // hover state
+        var columnHoverState = columnTemplate.column.states.create("hover");
+        columnHoverState.properties.fillOpacity = 1;
+        // you can change any property on hover state and it will be animated
+        columnHoverState.properties.cornerRadiusTopLeft = 35;
+        columnHoverState.properties.cornerRadiusTopRight = 35;
+
+        // show bullet when hovered
+        columnTemplate.events.on("over", event => {
+            var dataItem = event.target.dataItem;
+            var itemBullet = dataItem.bullets.getKey(bullet.uid);
+            itemBullet.isHover = true;
+        });
+
+        // hide bullet when mouse is out
+        columnTemplate.events.on("out", event => {
+            var dataItem = event.target.dataItem;
+            var itemBullet = dataItem.bullets.getKey(bullet.uid);
+            itemBullet.isHover = false;
+        });
+
+        // start dragging bullet even if we hit on column not just a bullet, this will make it more friendly for touch devices
+        columnTemplate.events.on("down", event => {
+            var dataItem = event.target.dataItem;
+            var itemBullet = dataItem.bullets.getKey(bullet.uid);
+            itemBullet.dragStart(event.pointer);
+        });
+
+        // when columns position changes, adjust minX/maxX of bullets so that we could only dragg vertically
+        columnTemplate.events.on("positionchanged", event => {
+            var dataItem = event.target.dataItem;
+            var itemBullet = dataItem.bullets.getKey(bullet.uid);
+
+            var column = dataItem.column;
+            itemBullet.minX = column.pixelX + column.pixelWidth / 2;
+            itemBullet.maxX = itemBullet.minX;
+            itemBullet.minY = 0;
+            itemBullet.maxY = chart.seriesContainer.pixelHeight;
+        });
+
+        // as by default columns of the same series are of the same color, we add adapter which takes colors from chart.colors color set
+        columnTemplate.adapter.add("fill", (fill, target) => {
+            return chart.colors.getIndex(target.dataItem.index).saturate(0.3);
+        });
+
+        bullet.adapter.add("fill", (fill, target) => {
+            return chart.colors.getIndex(target.dataItem.index).saturate(0.3);
+        });
+    </script>*@
 }
