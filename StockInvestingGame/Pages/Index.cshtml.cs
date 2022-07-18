@@ -25,7 +25,6 @@ namespace StockInvestingGame.Pages
         }
         
         //Retrieves stock data in a clump and returns the data
-        //TODO:  possibly chart creation (most likely a separate function)
         public IActionResult OnPostGetStocks(string value)
         {
             try
@@ -60,20 +59,6 @@ namespace StockInvestingGame.Pages
             catch (Exception)
             {
                 return new JsonResult("Ticker symbol not found or random date is not a trading day. Try again.");
-
-            }
-
-        }
-        public IActionResult OnPostGetStocksSlider(int date, string value)
-        {
-            try
-            {
-                return new JsonResult("");
-
-            }
-            catch (Exception)
-            {
-                return new JsonResult("");
 
             }
 
