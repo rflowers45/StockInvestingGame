@@ -13,7 +13,7 @@ namespace StockInvestingGame.Pages
         public decimal balance = 0; //Stores current balance as global variable
         public decimal price = 0; //Stores the current price of the day
         public int dayNum = 0;
-        
+
 
 
         private readonly ILogger<IndexModel> _logger;
@@ -52,6 +52,7 @@ namespace StockInvestingGame.Pages
                 HttpContext.Session.SetInt32("shares", 0);
                 HttpContext.Session.SetInt32("currentDay", testDate);
                 HttpContext.Session.SetInt32("dayCounter", 1);
+                
                 return new JsonResult(displayResults);
 
             }
@@ -268,6 +269,13 @@ namespace StockInvestingGame.Pages
 
             public decimal Close { get; set; }
             public decimal Volume { get; set; }
+        }
+
+        //Stores prices and balance
+        public class AccountData
+        {
+            public decimal price { get; set; }
+            public decimal balance { get; set; }
         }
 
         //********************HELPER FUNCTIONS********************

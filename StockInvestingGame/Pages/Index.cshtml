@@ -55,6 +55,7 @@
                 }
         </style>
 
+
         <input type="hidden" id="balanceHidden" />
         <input type="hidden" id="priceHidden" />
         <input type="button" class="game-button" role="button" id="btnHold" value="Hold" />
@@ -90,25 +91,24 @@
                 },
                 success: function(message) {
                     document.getElementById("result").innerHTML = message;
-
-                    document.getElementById("balanceHidden").setAttribute("balanceAttr", 50)
+                    //document.getElementById("btnGetStocks").setAttribute("disabled", "disabled")
                 }
             });
-
-
+            document.getElementById("priceHidden").setAttribute("value", 500)
+            
         });
     </script>
 
     <!--SLIDER LINKING-->
     <script type="text/javascript">
         $(function() {
-             //This is just a test, simulating the day's stock price
+             
             $("#slider").slider({
                 min: 1, max: 99, step: 1, value: 0,
                 slide: function(event, ui) {
-                    var price = (ui.value * 100);
+                    var price = (ui.value * 100);//This is just a test, simulating the day's stock price
                     $("#shareCount").val(ui.value); //Linking text field with slider
-                    $("#doughnut").roundSlider("setValue", price); //Linking chart with slider
+                    $("#doughnut").roundSlider("setValue", ui.value); //Linking chart with slider
                 }
             });
             var initialValue = $("#slider").slider("option", "value");
@@ -127,9 +127,9 @@
                 }
             });
             $("#doughnut").change(function(e) {
-                var shares = (e.value/100)
-                    $("#slider").slider("option", "value", shares); 
-                    $("#shareCount").val(shares); //Linking chart with slider
+                var shares = (e.value/100) //This is for converting the price into a share. Unused until I can figure out how to pass the daily price into the values
+                $("#slider").slider("option", "value", e.value); 
+                $("#shareCount").val(e.value); //Linking chart with slider
                 
                 
             });
@@ -224,7 +224,7 @@
     </script>
     <!--CHART-->
     <script type="text/javascript">
-
+        var price = 100;
         $("#doughnut").roundSlider({
             tooltipFormat: "DoughnutVal2",
             sliderType: "min-range",
@@ -233,13 +233,14 @@
             handleShape: "square",
             radius: 100,
             width: 15,
-            max: 10000,
-            value: 100,
-            step: 100
+            max: price,
+            value: 1,
+            step: 1
         });
 
+        //This code converts the value returned to whatever text value you need it to be.
         function DoughnutVal2(args) {
-            return "$" + args.value;
+            return "Share(s): " + args.value;
         }
     </script>
    @* <script>
