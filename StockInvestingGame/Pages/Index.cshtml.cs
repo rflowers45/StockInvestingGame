@@ -46,13 +46,13 @@ namespace StockInvestingGame.Pages
                 price = dayPrice; //Setting the global price to = the day price
                 string displayResults = ("Getting data for " + value + "<br> Date: " + dateString + "<br> Closing price: $" + dayPrice);
                 //SESSION VARIABLES
-                //HttpContext.Session.SetString("currentDate", dateString);
                 HttpContext.Session.SetString("balance", "10000");
                 HttpContext.Session.SetString("price", price.ToString());
                 HttpContext.Session.SetInt32("shares", 0);
                 HttpContext.Session.SetInt32("currentDay", testDate);
                 HttpContext.Session.SetInt32("dayCounter", 1);
-                
+                HttpContext.Session.SetString("ticker", value);
+
                 return new JsonResult(displayResults);
 
             }
@@ -83,17 +83,25 @@ namespace StockInvestingGame.Pages
         {
             try
             {
+                var symbol = HttpContext.Session.GetString("ticker"); //Setting the ticker symbol to what the user has entered
+                var apiKey = "YQ12ME2NUXQ29XG8"; //I got this key by registering my email. You all might wanna do the same or use mine?
+                var dailyPrices = $"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&outputsize=full&apikey={apiKey}&datatype=csv"
+                    .GetStringFromUrl().FromCsv<List<StockData>>();
+               
+                var vDateIndex = HttpContext.Session.GetInt32("currentDay"); //getting date index
+                int iDateIndex = vDateIndex.Value;
+                iDateIndex++;
+                var dayPrice = dailyPrices[iDateIndex].Close;//This gets the price
+                price = dayPrice;
+                HttpContext.Session.SetString("price", price.ToString());
                 string sSessionPrice = HttpContext.Session.GetString("price"); //Getting session price
                 string sSessionBalance = HttpContext.Session.GetString("balance"); //Getting session balance
-                string sDate = HttpContext.Session.GetString("currentDate");
+               
                 var vDayCounter = HttpContext.Session.GetInt32("dayCounter");
                 int iDayCounter = vDayCounter.Value;
-                var iCurrentDay = HttpContext.Session.GetInt32("currentDay");
-                int currentDayNum = iCurrentDay.Value;
                 balance = Convert.ToDecimal(sSessionBalance);
                 price = Convert.ToDecimal(sSessionPrice);
-                currentDayNum++;
-                HttpContext.Session.SetInt32("currentDay", currentDayNum);
+               
                 while (vDayCounter < 7)
                 {
                     decimal totalBuyingPrice = price * value;
@@ -110,10 +118,12 @@ namespace StockInvestingGame.Pages
                         int shares = iSessionShares.Value; //Have to convert nullable int to int
                         int iAddedShares = shares + value;
                         iDayCounter++;
+
+                        HttpContext.Session.SetInt32("currentDay", iDateIndex);
                         HttpContext.Session.SetInt32("dayCounter", iDayCounter);
                         HttpContext.Session.SetInt32("shares", iAddedShares); //Setting session shares held
                         HttpContext.Session.SetString("balance", total.ToString()); //Setting session balance
-                        return new JsonResult(value + " share(s) purchased. <br> Current Balance: $" + total + "<br> Shares Held: " + iAddedShares + "<br> Current Day: " + iDayCounter);
+                        return new JsonResult(value + " share(s) purchased. <br> Current Balance: $" + total + "<br> Shares Held: " + iAddedShares + "<br> Current Day: " + iDayCounter + "<br> New Price:  $" + price);
 
                     }
 
@@ -131,19 +141,26 @@ namespace StockInvestingGame.Pages
         {
             try
             {
+                var symbol = HttpContext.Session.GetString("ticker"); //Setting the ticker symbol to what the user has entered
+                var apiKey = "YQ12ME2NUXQ29XG8"; //I got this key by registering my email. You all might wanna do the same or use mine?
+                var dailyPrices = $"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&outputsize=full&apikey={apiKey}&datatype=csv"
+                    .GetStringFromUrl().FromCsv<List<StockData>>();
+
+                var vDateIndex = HttpContext.Session.GetInt32("currentDay"); //getting date index
+                int iDateIndex = vDateIndex.Value;
+                iDateIndex++;
+                var dayPrice = dailyPrices[iDateIndex].Close;//This gets the price
+                price = dayPrice;
+                HttpContext.Session.SetString("price", price.ToString());
                 string sSessionPrice = HttpContext.Session.GetString("price"); //Getting session price
                 string sSessionBalance = HttpContext.Session.GetString("balance"); //Getting session balance
-                string sDate = HttpContext.Session.GetString("currentDate");
                 var vDayCounter = HttpContext.Session.GetInt32("dayCounter");
                 int iDayCounter = vDayCounter.Value;
-                var iCurrentDay = HttpContext.Session.GetInt32("currentDay");
-                int currentDayNum = iCurrentDay.Value;
                 var iSessionShares = HttpContext.Session.GetInt32("shares"); //Getting sessions shares
                 int ownedShares = iSessionShares.Value; //Have to convert nullable-int to int
                 balance = Convert.ToDecimal(sSessionBalance);
                 price = Convert.ToDecimal(sSessionPrice);
-                currentDayNum++;
-                HttpContext.Session.SetInt32("currentDay", currentDayNum);
+               
                 while (iDayCounter < 7)
                 {
                     decimal totalSellingPrice = price * value;
@@ -159,10 +176,12 @@ namespace StockInvestingGame.Pages
                     {
                         int iSubtractedShares = ownedShares - value;
                         iDayCounter++;
+
+                        HttpContext.Session.SetInt32("currentDay", iDateIndex);
                         HttpContext.Session.SetInt32("dayCounter", iDayCounter);
                         HttpContext.Session.SetInt32("shares", iSubtractedShares); //Setting session shares held
                         HttpContext.Session.SetString("balance", total.ToString()); //Setting session balance
-                        return new JsonResult(value + " share(s) sold. <br> Current Balance: $" + total + "<br> Shares Held: " + iSubtractedShares + "<br> Current Day: " + iDayCounter);
+                        return new JsonResult(value + " share(s) sold. <br> Current Balance: $" + total + "<br> Shares Held: " + iSubtractedShares + "<br> Current Day: " + iDayCounter + "<br> New Price:  $" + price);
 
                     }
                 }
@@ -181,26 +200,34 @@ namespace StockInvestingGame.Pages
         {
             try
             {
+                var symbol = HttpContext.Session.GetString("ticker"); //Setting the ticker symbol to what the user has entered
+                var apiKey = "YQ12ME2NUXQ29XG8"; //I got this key by registering my email. You all might wanna do the same or use mine?
+                var dailyPrices = $"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&outputsize=full&apikey={apiKey}&datatype=csv"
+                    .GetStringFromUrl().FromCsv<List<StockData>>();
+
+                var vDateIndex = HttpContext.Session.GetInt32("currentDay"); //getting date index
+                int iDateIndex = vDateIndex.Value;
+                iDateIndex++;
+                var dayPrice = dailyPrices[iDateIndex].Close;//This gets the price
+                price = dayPrice;
+                HttpContext.Session.SetString("price", price.ToString());
                 string sSessionPrice = HttpContext.Session.GetString("price"); //Getting session price
                 string sSessionBalance = HttpContext.Session.GetString("balance"); //Getting session balance
-                string sDate = HttpContext.Session.GetString("currentDate");
+               
                 var vDayCounter = HttpContext.Session.GetInt32("dayCounter");
                 int iDayCounter = vDayCounter.Value;
-                var iCurrentDay = HttpContext.Session.GetInt32("currentDay");
-                int currentDayNum = iCurrentDay.Value;
                 var iSessionShares = HttpContext.Session.GetInt32("shares"); //Getting sessions shares
                 int ownedShares = iSessionShares.Value; //Have to convert nullable-int to int
                 balance = Convert.ToDecimal(sSessionBalance);
                 price = Convert.ToDecimal(sSessionPrice);
-                currentDayNum++;
-                HttpContext.Session.SetInt32("currentDay", currentDayNum);
                 while (iDayCounter < 7)
                 {
                     iDayCounter++;
+                    HttpContext.Session.SetInt32("currentDay", iDateIndex);
                     HttpContext.Session.SetInt32("dayCounter", iDayCounter);
                     HttpContext.Session.SetInt32("shares", ownedShares); //Setting session shares held
                     HttpContext.Session.SetString("balance", balance.ToString()); //Setting session balance
-                    return new JsonResult("Current Balance: $" + balance + "<br> Shares Held: " + ownedShares + "<br> Current Day: " + iDayCounter);
+                    return new JsonResult("Current Balance: $" + balance + "<br> Shares Held: " + ownedShares + "<br> Current Day: " + iDayCounter + "<br> New Price:  $" + price);
                 }
                 return new JsonResult(" ");
 
@@ -219,21 +246,29 @@ namespace StockInvestingGame.Pages
         {
             try
             {
+                var symbol = HttpContext.Session.GetString("ticker"); //Setting the ticker symbol to what the user has entered
+                var apiKey = "YQ12ME2NUXQ29XG8"; //I got this key by registering my email. You all might wanna do the same or use mine?
+                var dailyPrices = $"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&outputsize=full&apikey={apiKey}&datatype=csv"
+                    .GetStringFromUrl().FromCsv<List<StockData>>();
+
+                var vDateIndex = HttpContext.Session.GetInt32("currentDay"); //getting date index
+                int iDateIndex = vDateIndex.Value;
+                iDateIndex++;
+                var dayPrice = dailyPrices[iDateIndex].Close;//This gets the price
+                price = dayPrice;
+                HttpContext.Session.SetString("price", price.ToString());
                 string sSessionPrice = HttpContext.Session.GetString("price"); //Getting session price
                 string sSessionBalance = HttpContext.Session.GetString("balance"); //Getting session balance
-                string sDate = HttpContext.Session.GetString("currentDate");
-                var vDayCounter = HttpContext.Session.GetInt32("dayCounter");
-                int iDayCounter = vDayCounter.Value;
-                var iCurrentDay = HttpContext.Session.GetInt32("currentDay");
-                int currentDayNum = iCurrentDay.Value;
+                
                 var iSessionShares = HttpContext.Session.GetInt32("shares"); //Getting sessions shares
                 int ownedShares = iSessionShares.Value; //Have to convert nullable-int to int
                 balance = Convert.ToDecimal(sSessionBalance);
                 price = Convert.ToDecimal(sSessionPrice);
                 decimal totalSellingPrice = price * ownedShares;
                 decimal total = balance + totalSellingPrice;
-                currentDayNum++;
-                HttpContext.Session.SetInt32("currentDay", currentDayNum);
+                iDateIndex++;
+
+                HttpContext.Session.SetInt32("currentDay", iDateIndex);
                 HttpContext.Session.SetInt32("shares", ownedShares); //Setting session shares held
                 HttpContext.Session.SetString("balance", total.ToString()); //Setting session balance
                 return new JsonResult("Final Balance: $" + total);
