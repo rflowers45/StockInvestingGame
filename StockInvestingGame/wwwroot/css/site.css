@@ -44,9 +44,32 @@ body {
         box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;
         transform: translateY(-2px);
     }
+    .game-button:disabled {
+        pointer-events: none;
+        background-color: gray;
+        border: gray;
+        color: black;
+        
+    }
 
 @media (min-width: 768px) {
     .game-button {
         padding: 10px 30px;
     }
 }
+
+.results-container {
+    margin: auto;
+    width: 50%;
+    align-items: center;
+    background-color: #3C99DC;
+    color: white;
+    border-radius: 25px;
+}
+
+#chartdiv {
+    margin: auto;
+    width: 40%;
+    height: 50vh;
+}
+
