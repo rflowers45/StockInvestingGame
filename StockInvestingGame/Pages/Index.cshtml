@@ -31,38 +31,36 @@
         <div class="container">
             <p>Enter number of shares to buy/sell or drag the slider below</p>
             <div class="row">
-            <div class="col">
-                <input id="shareCount" type="text" value="" />
-            </div>
-            <div id="slider" class="col"></div>
-            <style>
-                #slider {
-                    width: 250px;
-                    margin: 0 auto;
-                }
-
-                    #slider .ui-slider-handle {
-                        background: #13aa52;
+                <div class="col gy-5">
+                    <input id="shareCount" type="text" value="" />
+                </div>
+                <div id="slider" class="col"></div>
+                <style>
+                    #slider {
+                        width: 250px;
+                        margin: 0 auto;
                     }
-            </style>
-            <div class="col">
 
-            </div>
+                        #slider .ui-slider-handle {
+                            background: #13aa52;
+                        }
+                </style>
+                <div id="doughnut" class="col"></div>
+                <style>
+                    #doughnut {
+                        width: 250px;
+                        margin: 0 auto;
+                    }
+
+                        #doughnut .rs-range-color {
+                            background: #4df794;
+                        }
+                </style>
+                <p>Adjust amount of money invested</p>
             </div>
         </div>
         <br />
-        <p>Adjust amount of money invested</p>
-        <div id="doughnut"></div>
-        <style>
-            #doughnut {
-                width: 250px;
-                margin: 0 auto;
-            }
 
-                #doughnut .rs-range-color {
-                    background: #4df794;
-                }
-        </style>
 
         <input type="hidden" id="balanceHidden" />
         <input type="hidden" id="priceHidden" />
@@ -85,6 +83,7 @@
     <link href="https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.css" rel="stylesheet" />
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <script type="text/javascript">
+
         $("#btnGetStocks").click(function() {
             var tickerSymbol = $('#tickerSymbol').val();
             $.ajax({
@@ -106,12 +105,11 @@
 
 
         });
-    </script>
+    
 
-    <!--SLIDER LINKING-->
-    <script type="text/javascript">
+    //<!--SLIDER LINKING-->
         $(function() {
-             //This is just a test, simulating the day's stock price
+            //This is just a test, simulating the day's stock price
             $("#slider").slider({
                 min: 1, max: 99, step: 1, value: 0,
                 slide: function(event, ui) {
@@ -124,29 +122,27 @@
             $("#shareCount").val(initialValue);
             //Linking slider & chart with text field
             $("#shareCount").change(function() {
-                
+
                 var oldVal = $("#slider").slider("option", "value");
                 var newVal = $(this).val();
                 var price = (newVal * 100);
                 if (isNaN(newVal) || newVal < 1 || newVal > 100) {
                     $("#shareCount").val(oldVal);
                 } else {
-                    $("#slider").slider("option", "value", newVal); 
+                    $("#slider").slider("option", "value", newVal);
                     $("#doughnut").roundSlider("setValue", price); //Linking chart with slider
                 }
             });
             $("#doughnut").change(function(e) {
-                var shares = (e.value/100)
-                    $("#slider").slider("option", "value", shares); 
-                    $("#shareCount").val(shares); //Linking chart with slider
-                
-                
+                var shares = (e.value / 100)
+                $("#slider").slider("option", "value", shares);
+                $("#shareCount").val(shares); //Linking chart with slider
+
+
             });
         });
-    </script>
 
-    <!--BUY BUTTON-->
-    <script type="text/javascript">
+    //<!--BUY BUTTON-->
 
         $("#btnBuy").click(function() {
             var shareCount = $('#shareCount').val();
@@ -165,9 +161,8 @@
                 }
             });
         });
-    </script>
-    <!--SELL BUTTON-->
-    <script type="text/javascript">
+
+    //<!--SELL BUTTON-->
 
         $("#btnSell").click(function() {
             var shareCount = $('#shareCount').val();
@@ -186,10 +181,8 @@
                 }
             });
         });
-    </script>
 
-    <!--HOLD BUTTON-->
-    <script type="text/javascript">
+    //<!--HOLD BUTTON-->
 
         $("#btnHold").click(function() {
             var shareCount = $('#shareCount').val();
@@ -208,10 +201,8 @@
                 }
             });
         });
-    </script>
 
-    <!--QUIT BUTTON-->
-    <script type="text/javascript">
+    //<!--QUIT BUTTON-->
 
         $("#btnQuit").click(function() {
             var shareCount = $('#shareCount').val();
@@ -230,9 +221,8 @@
                 }
             });
         });
-    </script>
-    <!--CHART-->
-    <script type="text/javascript">
+
+    //<!--CHART-->
 
         $("#doughnut").roundSlider({
             tooltipFormat: "DoughnutVal2",
@@ -251,7 +241,7 @@
             return "$" + args.value;
         }
     </script>
-   @* <script>
+    @* <script>
         am4core.useTheme(am4themes_animated);
 
         var chart = am4core.create("chartdiv", am4charts.XYChart);
@@ -410,4 +400,4 @@
             return chart.colors.getIndex(target.dataItem.index).saturate(0.3);
         });
     </script>*@
-}
+    }
