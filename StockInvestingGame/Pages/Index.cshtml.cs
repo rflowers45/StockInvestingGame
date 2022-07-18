@@ -29,10 +29,12 @@ namespace StockInvestingGame.Pages
         {
             try
             {
+                //*********API CALL*************
                 var symbol = value; //Setting the ticker symbol to what the user has entered
                 var apiKey = "YQ12ME2NUXQ29XG8"; //I got this key by registering my email. You all might wanna do the same or use mine?
                 var dailyPrices = $"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&outputsize=full&apikey={apiKey}&datatype=csv"
                     .GetStringFromUrl().FromCsv<List<StockData>>();
+                //*********API CALL*************
 
                 //This fills the object with values
                 dailyPrices.PrintDump();
@@ -69,14 +71,16 @@ namespace StockInvestingGame.Pages
         {
             try
             {
+                //*********API CALL*************
                 var symbol = HttpContext.Session.GetString("ticker"); //Setting the ticker symbol to what the user has entered
                 var apiKey = "YQ12ME2NUXQ29XG8"; //I got this key by registering my email. You all might wanna do the same or use mine?
                 var dailyPrices = $"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&outputsize=full&apikey={apiKey}&datatype=csv"
                     .GetStringFromUrl().FromCsv<List<StockData>>();
-                
+                //*********API CALL*************
+
                 var vDateIndex = HttpContext.Session.GetInt32("currentDay"); //getting date index
                 int iDateIndex = vDateIndex.Value;
-                
+                string dateString = dailyPrices[iDateIndex].Timestamp.ToString();
                 var dayPrice = dailyPrices[iDateIndex].Close;//This gets the price
                 price = dayPrice;
                 HttpContext.Session.SetString("price", price.ToString());
@@ -110,7 +114,7 @@ namespace StockInvestingGame.Pages
                         HttpContext.Session.SetInt32("dayCounter", iDayCounter);
                         HttpContext.Session.SetInt32("shares", iAddedShares); //Setting session shares held
                         HttpContext.Session.SetString("balance", total.ToString()); //Setting session balance
-                        return new JsonResult(value + " share(s) purchased. <br> Current Balance: $" + total + "<br> Shares Held: " + iAddedShares + "<br> Current Day: " + iDayCounter + "<br> New Price:  $" + price);
+                        return new JsonResult(value + " share(s) purchased. <br> Date: " + dateString +  "<br> Current Balance: $" + total + "<br> Shares Held: " + iAddedShares + "<br> Current Day: " + iDayCounter + "<br> New Price:  $" + price);
 
                     }
                     
@@ -128,14 +132,16 @@ namespace StockInvestingGame.Pages
         {
             try
             {
+                //*********API CALL*************
                 var symbol = HttpContext.Session.GetString("ticker"); //Setting the ticker symbol to what the user has entered
                 var apiKey = "YQ12ME2NUXQ29XG8"; //I got this key by registering my email. You all might wanna do the same or use mine?
                 var dailyPrices = $"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&outputsize=full&apikey={apiKey}&datatype=csv"
                     .GetStringFromUrl().FromCsv<List<StockData>>();
-                
+                //*********API CALL*************
+
                 var vDateIndex = HttpContext.Session.GetInt32("currentDay"); //getting date index
                 int iDateIndex = vDateIndex.Value;
-               
+                string dateString = dailyPrices[iDateIndex].Timestamp.ToString();
                 var dayPrice = dailyPrices[iDateIndex].Close;//This gets the price
                 price = dayPrice;
                 HttpContext.Session.SetString("price", price.ToString());
@@ -170,7 +176,7 @@ namespace StockInvestingGame.Pages
                         HttpContext.Session.SetInt32("dayCounter", iDayCounter);
                         HttpContext.Session.SetInt32("shares", iSubtractedShares); //Setting session shares held
                         HttpContext.Session.SetString("balance", total.ToString()); //Setting session balance
-                        return new JsonResult(value + " share(s) sold. <br> Current Balance: $" + total + "<br> Shares Held: " + iSubtractedShares + "<br> Current Day: " + iDayCounter + "<br> New Price:  $" + price);
+                        return new JsonResult(value + " share(s) sold. <br> Date: " + dateString +  "<br> Current Balance: $" + total + "<br> Shares Held: " + iSubtractedShares + "<br> Current Day: " + iDayCounter + "<br> New Price:  $" + price);
 
                     }
                 }
@@ -189,14 +195,16 @@ namespace StockInvestingGame.Pages
         {
             try
             {
+                //*********API CALL*************
                 var symbol = HttpContext.Session.GetString("ticker"); //Setting the ticker symbol to what the user has entered
                 var apiKey = "YQ12ME2NUXQ29XG8"; //I got this key by registering my email. You all might wanna do the same or use mine?
                 var dailyPrices = $"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&outputsize=full&apikey={apiKey}&datatype=csv"
                     .GetStringFromUrl().FromCsv<List<StockData>>();
-               // string endGame = endGameScenario();
+                //*********API CALL*************
+
                 var vDateIndex = HttpContext.Session.GetInt32("currentDay"); //getting date index
                 int iDateIndex = vDateIndex.Value;
-                
+                string dateString = dailyPrices[iDateIndex].Timestamp.ToString();
                 var dayPrice = dailyPrices[iDateIndex].Close;//This gets the price
                 price = dayPrice;
                 HttpContext.Session.SetString("price", price.ToString());
@@ -219,7 +227,7 @@ namespace StockInvestingGame.Pages
                     HttpContext.Session.SetInt32("shares", ownedShares); //Setting session shares held
                     HttpContext.Session.SetString("balance", balance.ToString()); //Setting session balance
 
-                    return new JsonResult("Current Balance: $" + balance + "<br> Shares Held: " + ownedShares + "<br> Current Day: " + iDayCounter + "<br> New Price:  $" + price);
+                    return new JsonResult("Date: " + dateString + "<br> Current Balance: $" + balance + "<br> Shares Held: " + ownedShares + "<br> Current Day: " + iDayCounter + "<br> New Price:  $" + price);
                 }
                 return new JsonResult(endGame);
 
@@ -238,17 +246,6 @@ namespace StockInvestingGame.Pages
         {
             try
             {
-               // var symbol = HttpContext.Session.GetString("ticker"); //Setting the ticker symbol to what the user has entered
-                //var apiKey = "YQ12ME2NUXQ29XG8"; //I got this key by registering my email. You all might wanna do the same or use mine?
-                //var dailyPrices = $"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&outputsize=full&apikey={apiKey}&datatype=csv"
-                   // .GetStringFromUrl().FromCsv<List<StockData>>();
-
-               // var vDateIndex = HttpContext.Session.GetInt32("currentDay"); //getting date index
-               // int iDateIndex = vDateIndex.Value;
-                //iDateIndex++;
-                //var dayPrice = dailyPrices[iDateIndex].Close;//This gets the price
-                //price = dayPrice;
-                //HttpContext.Session.SetString("price", price.ToString());
                 string sSessionPrice = HttpContext.Session.GetString("price"); //Getting session price
                 string sSessionBalance = HttpContext.Session.GetString("balance"); //Getting session balance
                
@@ -272,13 +269,6 @@ namespace StockInvestingGame.Pages
 
             }
 
-        }
-
-        //Not in use currently. Possibly used later on?
-        public IActionResult OnPostRunChart(int value)
-        {
-            string test = "THIS IS A TEST";
-            return new JsonResult(test);
         }
 
         //********************CLASSES********************
@@ -314,15 +304,8 @@ namespace StockInvestingGame.Pages
 
             return newDate;
         }
-        //Incrementing function
-       /* public void IncrementDay()
-        {
-            var iCurrentDay = HttpContext.Session.GetInt32("currentDay");
-            int currentDayNum = iCurrentDay.Value;
-            currentDayNum++;
-            HttpContext.Session.SetInt32("currentDay", currentDayNum);
-        }
-       */
+
+        //This function shows gains and losses and displays results when game is finished
        public string endGameScenario()
         {
             string sSessionPrice = HttpContext.Session.GetString("price"); //Getting session price
@@ -343,13 +326,11 @@ namespace StockInvestingGame.Pages
                 balanceResult = " You lost: $";
             }
 
-            //iDateIndex++;
-            //HttpContext.Session.SetInt32("currentDay", iDateIndex);
             HttpContext.Session.SetInt32("shares", ownedShares); //Setting session shares held
             HttpContext.Session.SetString("balance", total.ToString()); //Setting session balance
 
             //return new JsonResult(endGame + " Final Balance: $" + total + "");
-            return "Thank you for playing! " + "Final Balance: $" + total + balanceResult + Math.Abs(difference);
+            return "Thank you for playing! <br>" + "Final Balance: $" + total + "<br>" + balanceResult + Math.Abs(difference);
         }
        
     }
