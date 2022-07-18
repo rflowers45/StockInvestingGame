@@ -68,7 +68,7 @@
 
 @section Scripts
     {
-    <!--DISPLAYING STOCK PRICE-->
+   
     <script src="//cdn.amcharts.com/lib/4/core.js"></script>
     <script src="//cdn.amcharts.com/lib/4/charts.js"></script>
     <script src="//cdn.amcharts.com/lib/4/themes/animated.js"></script>
@@ -77,6 +77,7 @@
     <link href="https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.css" rel="stylesheet" />
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <script type="text/javascript">
+    //<!--DISPLAYING STOCK PRICE-->
         $("#btnGetStocks").click(function() {
             var tickerSymbol = $('#tickerSymbol').val();
             $.ajax({
@@ -91,16 +92,12 @@
                 },
                 success: function(message) {
                     document.getElementById("result").innerHTML = message;
-                    //document.getElementById("btnGetStocks").setAttribute("disabled", "disabled")
+                    
                 }
             });
-            document.getElementById("priceHidden").setAttribute("value", 500)
 
         });
-    </script>
-
-    <!--SLIDER LINKING-->
-    <script type="text/javascript">
+    //<!--SLIDER LINKING-->
         $(function() {
 
             $("#slider").slider({
@@ -118,12 +115,12 @@
 
                 var oldVal = $("#slider").slider("option", "value");
                 var newVal = $(this).val();
-                var price = (newVal * 100);
+                var price = (newVal * 100); //for testing
                 if (isNaN(newVal) || newVal < 1 || newVal > 100) {
                     $("#shareCount").val(oldVal);
                 } else {
                     $("#slider").slider("option", "value", newVal); 
-                    $("#doughnut").roundSlider("setValue", price); //Linking chart with slider
+                    $("#doughnut").roundSlider("setValue", newVal); //Linking chart with slider
                 }
             });
             $("#doughnut").change(function(e) {
@@ -133,11 +130,8 @@
 
             });
         });
-    </script>
 
-    <!--BUY BUTTON-->
-    <script type="text/javascript">
-
+    //<!--BUY BUTTON-->
         $("#btnBuy").click(function() {
             var shareCount = $('#shareCount').val();
             $.ajax({
@@ -151,16 +145,11 @@
                     "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
                 },
                 success: function(message) {
-                    document.getElementById("balanceResults").innerHTML = message;
+                    document.getElementById("result").innerHTML = message;
                 }
             });
         });
-
-
-    </script>
-    <!--SELL BUTTON-->
-    <script type="text/javascript">
-
+    //<!--SELL BUTTON-->
         $("#btnSell").click(function() {
             var shareCount = $('#shareCount').val();
             $.ajax({
@@ -174,15 +163,12 @@
                     "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
                 },
                 success: function(message) {
-                    document.getElementById("balanceResults").innerHTML = message;
+                    document.getElementById("result").innerHTML = message;
                 }
             });
         });
-    </script>
 
-    <!--HOLD BUTTON-->
-    <script type="text/javascript">
-
+    //<!--HOLD BUTTON-->
         $("#btnHold").click(function() {
             var shareCount = $('#shareCount').val();
             $.ajax({
@@ -196,15 +182,12 @@
                     "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
                 },
                 success: function(message) {
-                    document.getElementById("balanceResults").innerHTML = message;
+                    document.getElementById("result").innerHTML = message;
                 }
             });
         });
-    </script>
 
-    <!--QUIT BUTTON-->
-    <script type="text/javascript">
-
+    //<!--QUIT BUTTON-->
         $("#btnQuit").click(function() {
             var shareCount = $('#shareCount').val();
             $.ajax({
@@ -218,15 +201,11 @@
                     "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
                 },
                 success: function(message) {
-                    document.getElementById("balanceResults").innerHTML = message;
+                    document.getElementById("result").innerHTML = message;
                 }
             });
-        });
-
-       
-    </script>
-    <!--CHART-->
-    <script type="text/javascript">
+        });       
+    //<!--CHART-->
         var price = 100;
         $("#doughnut").roundSlider({
             tooltipFormat: "DoughnutVal2",

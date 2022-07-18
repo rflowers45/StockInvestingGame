@@ -211,7 +211,7 @@ namespace StockInvestingGame.Pages
                 balance = Convert.ToDecimal(sSessionBalance);
                 price = Convert.ToDecimal(sSessionPrice);
                 string endGame = endGameScenario();
-                while (iDayCounter <= 7)
+                while (iDayCounter < 8)
                 {
                     iDateIndex++;
                     HttpContext.Session.SetInt32("currentDay", iDateIndex);
