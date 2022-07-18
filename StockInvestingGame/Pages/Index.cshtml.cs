@@ -85,11 +85,11 @@ namespace StockInvestingGame.Pages
                
                 var vDayCounter = HttpContext.Session.GetInt32("dayCounter");
                 int iDayCounter = vDayCounter.Value;
-              
+                iDayCounter++;
                 balance = Convert.ToDecimal(sSessionBalance);
                 price = Convert.ToDecimal(sSessionPrice);
                 string endGame = endGameScenario();
-                while (iDayCounter <= 7)
+                while (iDayCounter < 8)
                 {
                     decimal totalBuyingPrice = price * value;
                     decimal total = balance - totalBuyingPrice;
@@ -107,7 +107,6 @@ namespace StockInvestingGame.Pages
 
                         iDateIndex++;
                         HttpContext.Session.SetInt32("currentDay", iDateIndex);
-                        iDayCounter++;
                         HttpContext.Session.SetInt32("dayCounter", iDayCounter);
                         HttpContext.Session.SetInt32("shares", iAddedShares); //Setting session shares held
                         HttpContext.Session.SetString("balance", total.ToString()); //Setting session balance
@@ -144,13 +143,13 @@ namespace StockInvestingGame.Pages
                 string sSessionBalance = HttpContext.Session.GetString("balance"); //Getting session balance
                 var vDayCounter = HttpContext.Session.GetInt32("dayCounter");
                 int iDayCounter = vDayCounter.Value;
-                //iDayCounter++;
+                iDayCounter++;
                 var iSessionShares = HttpContext.Session.GetInt32("shares"); //Getting sessions shares
                 int ownedShares = iSessionShares.Value; //Have to convert nullable-int to int
                 balance = Convert.ToDecimal(sSessionBalance);
                 price = Convert.ToDecimal(sSessionPrice);
                 string endGame = endGameScenario();
-                while (iDayCounter <= 7)
+                while (iDayCounter < 8)
                 {
                     decimal totalSellingPrice = price * value;
                     decimal total = balance + totalSellingPrice;
@@ -168,7 +167,6 @@ namespace StockInvestingGame.Pages
 
                         iDateIndex++;
                         HttpContext.Session.SetInt32("currentDay", iDateIndex);
-                        iDayCounter++;
                         HttpContext.Session.SetInt32("dayCounter", iDayCounter);
                         HttpContext.Session.SetInt32("shares", iSubtractedShares); //Setting session shares held
                         HttpContext.Session.SetString("balance", total.ToString()); //Setting session balance
@@ -207,7 +205,7 @@ namespace StockInvestingGame.Pages
                
                 var vDayCounter = HttpContext.Session.GetInt32("dayCounter");
                 int iDayCounter = vDayCounter.Value;
-                
+                iDayCounter++;
                 var iSessionShares = HttpContext.Session.GetInt32("shares"); //Getting sessions shares
                 int ownedShares = iSessionShares.Value; //Have to convert nullable-int to int
                 balance = Convert.ToDecimal(sSessionBalance);
@@ -217,7 +215,6 @@ namespace StockInvestingGame.Pages
                 {
                     iDateIndex++;
                     HttpContext.Session.SetInt32("currentDay", iDateIndex);
-                    iDayCounter++;
                     HttpContext.Session.SetInt32("dayCounter", iDayCounter);
                     HttpContext.Session.SetInt32("shares", ownedShares); //Setting session shares held
                     HttpContext.Session.SetString("balance", balance.ToString()); //Setting session balance
