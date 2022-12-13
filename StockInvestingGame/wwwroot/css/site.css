@@ -17,6 +17,20 @@ body {
     margin-bottom: 60px;
 }
 
+.jumbotron {
+    padding: 1.5rem 2rem;
+    background-color: #492365;
+    border-radius: 0;
+    margin-bottom: 0;
+}
+.header-display {
+    color: white;
+}
+
+.card-color1 {
+    background-color: rgba(0,150,4,0.1);
+
+}
 
 .game-button {
     background-color: #13aa52;

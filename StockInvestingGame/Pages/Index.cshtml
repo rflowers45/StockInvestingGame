@@ -1,74 +1,161 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Stock Investing";
 }
 @Html.AntiForgeryToken()
-
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-<div class="text-center">
-    <h1 class="display-4">Stock Investing</h1>
-    <h3 class="display-8">Practice your investing skills!</h3>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
 
+<div class="container">
+    <h2 class="display-6">Practice your investing skills!</h2>
+</div>
+<hr style="color:#000000">
+<div class="container">
     <form id="form1" runat="server">
-        <p>You are given $10,000 to invest in the stock market. You are placed on a random day, at least six months in the past. You are able to buy, sell, or hold for a total of 7 days. Good luck!</p>
-        <br />
-        <div class="results-container">
-            <div class="text-center" id="result">Enter Ticker Symbol Below</div>
-            <div class="text-center" id="balanceResults"></div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <!--INTRODUCTION-->
+                    <p class="">
+                        You are given $10,000 to invest in the stock market.
+                        
+                        You are placed on a random day, at least six months in the past, and are provided with that day's opening share price.
+                        
+                        You are able to buy, sell, or hold (skip a day) for a total of 7 days.
+                        
+                        When the 7th day is finished, you will be shown your total gains or losses.
+                        
+                        Good luck!
+                    </p>
+                </div>
+                <div class="col">
+                    <div class="display-1 text-center"><img src="~/images/Money.png" alt="Illustration of printed money" width="120" height="120"/></div>
+                    
+                </div>
+            </div>
+        
+        </div>
+        <hr />
+        <!--TICKER/RESULTS DISPLAY-->
+        <div class="card-color1">
+            <div class="container border border-secondary rounded shadow-sm">
+                <div class="row">
+                    <div class="col">
+                        <!--Ticker Symbol Search-->
+                        <br />
+                        <h5>Search for a ticker symbol below and click "Begin Game"</h5>
+                        <br>
+                        <div class="input-group mb-3 w-50">
+                            <input id="tickerSymbol" type="text" class="form-control" placeholder="Ticker Symbol" aria-label="Ticker Symbol" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" id="basic-addon2"><i class="bi bi-search"></i></span>
+                            </div>
+                        </div>
+                        <input type="button" class="btn btn-outline-dark btn-lg" role="button" id="btnGetStocks" value="Begin Game" />
+                        <br />
+                        <br />
+                    </div>
+                    <!--Balance and Results Displayed Here-->
+                    <div class="col">
+                        <br />
+                        <h5>Results:</h5>
+                        <div class="container">
+
+                            <div class="display-5 text-center" id="result"></div>
+                            <div class="display-5 text-center" id="balanceResults"></div>
+                            <br />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
         <br />
+        <!--BUY/SELL/HOLD-->
+        <!--Share input-->
+        <div class="card-color1">
+            <div class="container container border border-secondary rounded shadow-sm">
+                <br />
+                <div class="row">
+                    <div class="col">
+                        <h5>Enter number of shares to buy/sell or drag one of the sliders below</h5>
+                        <div class="input-group mb-3 w-25">
+                            <input id="shareCount" type="text" class="form-control" placeholder="Number of Shares" alt="Share Count Input" >
+                        </div>
+                        <br />
 
-        <input id="tickerSymbol" type="text" value="E.G. AAPL" />
-        <br />
-        <br />
-        <input type="button" class="game-button" role="button" id="btnGetStocks" value="Begin Game" />
-        <br />
-        <br />
-        <input type="button" class="game-button" role="button" id="btnBuy" value="Buy" />
-        <input type="button" class="game-button" role="button" id="btnSell" value="Sell" />
-        <br />
-        <p>Enter number of shares to buy/sell or drag the slider below</p>
-        <input id="shareCount" type="text" value="" />
-        <div id="slider"></div>
-        <style>
-            #slider {
-                width: 250px;
-                margin: 0 auto;
-            }
 
-                #slider .ui-slider-handle {
-                    background: #13aa52;
-                }
-        </style>
-        <br />
-        <p>Adjust amount of money invested</p>
-        <div id="doughnut"></div>
-        <style>
-            #doughnut {
-                width: 250px;
-                margin: 0 auto;
-            }
+                        <p class="text-black-20">Shares (1-99)</p>
+                        <div id="slider" alt="Share Count Slider"></div>
+                        <style>
+                            #slider {
+                                width: 250px;
+                            }
 
-                #doughnut .rs-range-color {
-                    background: #4df794;
-                }
-        </style>
+                                #slider .ui-slider-handle {
+                                    background: #13aa52;
+                                }
+                        </style>
+                        <br />
+                    </div>
+                    <div class="col">
+                        <div class="container" id="doughnut"></div>
+                        <style>
+                            #doughnut {
+                                margin-right: 75%;
+                            }
+
+                                #doughnut .rs-range-color {
+                                    background: #198754;
+                                }
+
+                                #doughnut .rs-handle {
+                                    background-color: #13aa52
+                                }
+                        </style>
+                    </div>
+                </div>
+                <div class="row">
+                    <hr />
+                    <div class="container">
+                        <div class="btn-group btn-group-lg" role="group" aria-label="Buy Sell Hold">
+                            <button type="button" class="btn btn-outline-dark btn-sep" role="button" id="btnBuy">Buy</button>
+                            <button type="button" class="btn btn-outline-dark" role="button" id="btnSell">Sell</button>
+                            <button type="button" class="btn btn-outline-dark" role="button" id="btnHold">Hold</button>
+                        </div>
+                    </div>
+                    
+                </div>
+                <br />
+            </div>
+        </div>
+
+        <!--Buttons-->
+        <br />        
+        <hr />
+        <div class="container">
+            <input type="button" class="btn btn-outline-danger btn-lg" role="button" id="btnQuit" value="Quit" />
+            <br />
+            <br />
+        </div>
 
 
         <input type="hidden" id="balanceHidden" />
         <input type="hidden" id="priceHidden" />
-        <input type="button" class="game-button" role="button" id="btnHold" value="Hold" />
-        <input type="button" class="game-button" role="button" id="btnQuit" value="Quit" />
+
         <br />
-
-
     </form>
 </div>
 
 @section Scripts
     {
-   
+
     <script src="//cdn.amcharts.com/lib/4/core.js"></script>
     <script src="//cdn.amcharts.com/lib/4/charts.js"></script>
     <script src="//cdn.amcharts.com/lib/4/themes/animated.js"></script>
@@ -77,9 +164,11 @@
     <link href="https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.css" rel="stylesheet" />
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <script type="text/javascript">
-    //<!--DISPLAYING STOCK PRICE-->
-        $("#btnGetStocks").click(function() {
+        //<!--DISPLAYING STOCK PRICE-->
+        $("#btnGetStocks").click(function () {
+
             var tickerSymbol = $('#tickerSymbol').val();
+
             $.ajax({
                 type: "POST",
                 url: "/Index?handler=GetStocks",
@@ -90,19 +179,18 @@
                 {
                     "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
                 },
-                success: function(message) {
+                success: function (message) {
                     document.getElementById("result").innerHTML = message;
-                    
                 }
             });
-
+            $(this).prop("disabled", true);
         });
-    //<!--SLIDER LINKING-->
-        $(function() {
+        //<!--SLIDER LINKING-->
+        $(function () {
 
             $("#slider").slider({
                 min: 1, max: 99, step: 1, value: 0,
-                slide: function(event, ui) {
+                slide: function (event, ui) {
                     var price = (ui.value * 100);//This is just a test, simulating the day's stock price
                     $("#shareCount").val(ui.value); //Linking text field with slider
                     $("#doughnut").roundSlider("setValue", ui.value); //Linking chart with slider
@@ -111,7 +199,7 @@
             var initialValue = $("#slider").slider("option", "value");
             $("#shareCount").val(initialValue);
             //Linking slider & chart with text field
-            $("#shareCount").change(function() {
+            $("#shareCount").change(function () {
 
                 var oldVal = $("#slider").slider("option", "value");
                 var newVal = $(this).val();
@@ -119,11 +207,11 @@
                 if (isNaN(newVal) || newVal < 1 || newVal > 100) {
                     $("#shareCount").val(oldVal);
                 } else {
-                    $("#slider").slider("option", "value", newVal); 
+                    $("#slider").slider("option", "value", newVal);
                     $("#doughnut").roundSlider("setValue", newVal); //Linking chart with slider
                 }
             });
-            $("#doughnut").change(function(e) {
+            $("#doughnut").change(function (e) {
                 var shares = (e.value / 100) //This is for converting the price into a share. Unused until I can figure out how to pass the daily price into the values
                 $("#slider").slider("option", "value", e.value);
                 $("#shareCount").val(e.value); //Linking chart with slider
@@ -131,8 +219,8 @@
             });
         });
 
-    //<!--BUY BUTTON-->
-        $("#btnBuy").click(function() {
+        //<!--BUY BUTTON-->
+        $("#btnBuy").click(function () {
             var shareCount = $('#shareCount').val();
             $.ajax({
                 type: "POST",
@@ -144,13 +232,13 @@
                 {
                     "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
                 },
-                success: function(message) {
+                success: function (message) {
                     document.getElementById("result").innerHTML = message;
                 }
             });
         });
-    //<!--SELL BUTTON-->
-        $("#btnSell").click(function() {
+        //<!--SELL BUTTON-->
+        $("#btnSell").click(function () {
             var shareCount = $('#shareCount').val();
             $.ajax({
                 type: "POST",
@@ -162,14 +250,14 @@
                 {
                     "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
                 },
-                success: function(message) {
+                success: function (message) {
                     document.getElementById("result").innerHTML = message;
                 }
             });
         });
 
-    //<!--HOLD BUTTON-->
-        $("#btnHold").click(function() {
+        //<!--HOLD BUTTON-->
+        $("#btnHold").click(function () {
             var shareCount = $('#shareCount').val();
             $.ajax({
                 type: "POST",
@@ -181,15 +269,16 @@
                 {
                     "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
                 },
-                success: function(message) {
+                success: function (message) {
                     document.getElementById("result").innerHTML = message;
                 }
             });
         });
 
-    //<!--QUIT BUTTON-->
-        $("#btnQuit").click(function() {
+        //<!--QUIT BUTTON-->
+        $("#btnQuit").click(function () {
             var shareCount = $('#shareCount').val();
+            
             $.ajax({
                 type: "POST",
                 url: "/Index?handler=Quit",
@@ -200,21 +289,22 @@
                 {
                     "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
                 },
-                success: function(message) {
+                success: function (message) {
                     document.getElementById("result").innerHTML = message;
+                    document.getElementById("btnGetStocks").disabled = false;
                 }
             });
-        });       
-    //<!--CHART-->
+        });
+        //<!--CHART-->
         var price = 100;
         $("#doughnut").roundSlider({
             tooltipFormat: "DoughnutVal2",
             sliderType: "min-range",
             handleSize: "+1",
-            handleSize: "24,12",
+            handleSize: "30,12",
             handleShape: "square",
             radius: 100,
-            width: 15,
+            width: 25,
             max: price,
             value: 1,
             step: 1
@@ -224,164 +314,23 @@
         function DoughnutVal2(args) {
             return "Share(s): " + args.value;
         }
-    </script>
-    @* <script>
-        am4core.useTheme(am4themes_animated);
 
-        var chart = am4core.create("chartdiv", am4charts.XYChart);
-        chart.hiddenState.properties.opacity = 0; // this makes initial fade in effect
-
-        chart.data = [
-            {
-                account: "Shares to purchase",
-                money: 0
-            },
-        ];
-
-        chart.padding(40, 40, 0, 0);
-        chart.maskBullets = false; // allow bullets to go out of plot area
-
-        var text = chart.plotContainer.createChild(am4core.Label);
-        text.text = "";
-        text.y = 5;
-        text.x = am4core.percent(100);
-        text.horizontalCenter = "right";
-        text.zIndex = 100;
-        text.fillOpacity = 0.7;
-
-        // category axis
-        var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-        categoryAxis.dataFields.category = "account";
-        categoryAxis.renderer.grid.template.disabled = true;
-        categoryAxis.renderer.minGridDistance = 60;
-
-
-        // value axis
-        var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-        // we set fixed min/max and strictMinMax to true, as otherwise value axis will adjust min/max while dragging and it won't look smooth
-        valueAxis.strictMinMax = true;
-        valueAxis.min = 0;
-        valueAxis.max = 100;
-        valueAxis.renderer.minWidth = 40;
-
-        // series
-        var series = chart.series.push(new am4charts.ColumnSeries());
-        series.dataFields.categoryX = "account";
-        series.dataFields.valueY = "money";
-        series.tooltip.pointerOrientation = "vertical";
-        series.tooltip.dy = -8;
-        series.sequencedInterpolation = true;
-        series.defaultState.interpolationDuration = 1500;
-        series.columns.template.strokeOpacity = 0;
-
-        // label bullet
-        var labelBullet = new am4charts.LabelBullet();
-        series.bullets.push(labelBullet);
-        labelBullet.label.text = "{valueY.value.formatNumber('#.')}";
-        labelBullet.strokeOpacity = 0;
-        labelBullet.stroke = am4core.color("#dadada");
-        labelBullet.dy = -20;
-
-
-        // series bullet
-        var bullet = series.bullets.create();
-        bullet.stroke = am4core.color("#ffffff");
-        bullet.strokeWidth = 3;
-        bullet.opacity = 1; // initially invisible
-        bullet.defaultState.properties.opacity = 1;
-        // resize cursor when over
-        bullet.cursorOverStyle = am4core.MouseCursorStyle.verticalResize;
-        bullet.draggable = true;
-
-        // create hover state
-        var hoverState = bullet.states.create("hover");
-        hoverState.properties.opacity = 1; // visible when hovered
-
-        // add circle sprite to bullet
-        var circle = bullet.createChild(am4core.Circle);
-        circle.radius = 8;
-
-        // while dragging
-        bullet.events.on("drag", event => {
-            handleDrag(event);
-        });
-
-        bullet.events.on("dragstop", event => {
-            handleDrag(event);
-            var dataItem = event.target.dataItem;
-            dataItem.column.isHover = false;
-            event.target.isHover = false;
-        });
-
-        function handleDrag(event) {
-            var dataItem = event.target.dataItem;
-            // convert coordinate to value
-            var value = valueAxis.yToValue(event.target.pixelY);
-            // set new value
-            dataItem.valueY = value;
-            // make column hover
-            dataItem.column.isHover = true;
-            // hide tooltip not to interrupt
-            dataItem.column.hideTooltip(0);
-            // make bullet hovered (as it might hide if mouse moves away)
-            event.target.isHover = true;
+        //*****Accessibility FUNCTIONS
+        function highContrastFunction() {
+            document.getElementById('btnGetStocks').className = "btn btn-dark btn-lg";
+            document.getElementById('btnBuy').className = "btn btn-dark btn-lg";
+            document.getElementById('btnSell').className = "btn btn-dark btn-lg";
+            document.getElementById('btnHold').className = "btn btn-dark btn-lg";
+            document.getElementById('btnQuit').className = "btn btn-dark btn-lg";
         }
 
-        // column template
-        var columnTemplate = series.columns.template;
-        columnTemplate.column.cornerRadiusTopLeft = 8;
-        columnTemplate.column.cornerRadiusTopRight = 8;
-        columnTemplate.column.fillOpacity = 0.8;
-        columnTemplate.tooltipText = "drag me";
-        columnTemplate.tooltipY = 0; // otherwise will point to middle of the column
-
-        // hover state
-        var columnHoverState = columnTemplate.column.states.create("hover");
-        columnHoverState.properties.fillOpacity = 1;
-        // you can change any property on hover state and it will be animated
-        columnHoverState.properties.cornerRadiusTopLeft = 35;
-        columnHoverState.properties.cornerRadiusTopRight = 35;
-
-        // show bullet when hovered
-        columnTemplate.events.on("over", event => {
-            var dataItem = event.target.dataItem;
-            var itemBullet = dataItem.bullets.getKey(bullet.uid);
-            itemBullet.isHover = true;
-        });
-
-        // hide bullet when mouse is out
-        columnTemplate.events.on("out", event => {
-            var dataItem = event.target.dataItem;
-            var itemBullet = dataItem.bullets.getKey(bullet.uid);
-            itemBullet.isHover = false;
-        });
-
-        // start dragging bullet even if we hit on column not just a bullet, this will make it more friendly for touch devices
-        columnTemplate.events.on("down", event => {
-            var dataItem = event.target.dataItem;
-            var itemBullet = dataItem.bullets.getKey(bullet.uid);
-            itemBullet.dragStart(event.pointer);
-        });
-
-        // when columns position changes, adjust minX/maxX of bullets so that we could only dragg vertically
-        columnTemplate.events.on("positionchanged", event => {
-            var dataItem = event.target.dataItem;
-            var itemBullet = dataItem.bullets.getKey(bullet.uid);
-
-            var column = dataItem.column;
-            itemBullet.minX = column.pixelX + column.pixelWidth / 2;
-            itemBullet.maxX = itemBullet.minX;
-            itemBullet.minY = 0;
-            itemBullet.maxY = chart.seriesContainer.pixelHeight;
-        });
-
-        // as by default columns of the same series are of the same color, we add adapter which takes colors from chart.colors color set
-        columnTemplate.adapter.add("fill", (fill, target) => {
-            return chart.colors.getIndex(target.dataItem.index).saturate(0.3);
-        });
-
-        bullet.adapter.add("fill", (fill, target) => {
-            return chart.colors.getIndex(target.dataItem.index).saturate(0.3);
-        });
-    </script>*@
+        function standardButtonFunction() {
+            document.getElementById('btnGetStocks').className = "btn btn-outline-dark btn-lg";
+            document.getElementById('btnBuy').className = "btn btn-outline-dark btn-lg";
+            document.getElementById('btnSell').className = "btn btn-outline-dark btn-lg";
+            document.getElementById('btnHold').className = "btn btn-outline-dark btn-lg";
+            document.getElementById('btnQuit').className = "btn btn-outline-danger btn-lg";
+        }
+    </script>
+    @**@
     }

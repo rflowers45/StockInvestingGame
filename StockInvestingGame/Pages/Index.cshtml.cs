@@ -32,7 +32,7 @@ namespace StockInvestingGame.Pages
                 //*********API CALL*************
                 var symbol = value; //Setting the ticker symbol to what the user has entered
                 var apiKey = "YQ12ME2NUXQ29XG8"; //I got this key by registering my email. You all might wanna do the same or use mine?
-                var dailyPrices = $"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&outputsize=full&apikey={apiKey}&datatype=csv"
+                var dailyPrices = $"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={symbol}&outputsize=full&apikey={apiKey}&datatype=csv"
                     .GetStringFromUrl().FromCsv<List<StockData>>();
                 //*********API CALL*************
 
@@ -74,7 +74,7 @@ namespace StockInvestingGame.Pages
                 //*********API CALL*************
                 var symbol = HttpContext.Session.GetString("ticker"); //Setting the ticker symbol to what the user has entered
                 var apiKey = "YQ12ME2NUXQ29XG8"; //I got this key by registering my email. You all might wanna do the same or use mine?
-                var dailyPrices = $"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&outputsize=full&apikey={apiKey}&datatype=csv"
+                var dailyPrices = $"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={symbol}&outputsize=full&apikey={apiKey}&datatype=csv"
                     .GetStringFromUrl().FromCsv<List<StockData>>();
                 //*********API CALL*************
 
@@ -135,7 +135,7 @@ namespace StockInvestingGame.Pages
                 //*********API CALL*************
                 var symbol = HttpContext.Session.GetString("ticker"); //Setting the ticker symbol to what the user has entered
                 var apiKey = "YQ12ME2NUXQ29XG8"; //I got this key by registering my email. You all might wanna do the same or use mine?
-                var dailyPrices = $"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&outputsize=full&apikey={apiKey}&datatype=csv"
+                var dailyPrices = $"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={symbol}&outputsize=full&apikey={apiKey}&datatype=csv"
                     .GetStringFromUrl().FromCsv<List<StockData>>();
                 //*********API CALL*************
 
@@ -198,7 +198,7 @@ namespace StockInvestingGame.Pages
                 //*********API CALL*************
                 var symbol = HttpContext.Session.GetString("ticker"); //Setting the ticker symbol to what the user has entered
                 var apiKey = "YQ12ME2NUXQ29XG8"; //I got this key by registering my email. You all might wanna do the same or use mine?
-                var dailyPrices = $"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&outputsize=full&apikey={apiKey}&datatype=csv"
+                var dailyPrices = $"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={symbol}&outputsize=full&apikey={apiKey}&datatype=csv"
                     .GetStringFromUrl().FromCsv<List<StockData>>();
                 //*********API CALL*************
 
@@ -260,7 +260,7 @@ namespace StockInvestingGame.Pages
                 HttpContext.Session.SetInt32("shares", ownedShares); //Setting session shares held
                 HttpContext.Session.SetString("balance", total.ToString()); //Setting session balance
                 string endGame = endGameScenario();
-                return new JsonResult(endGame);
+                return new JsonResult("");
              
             }
             catch (Exception)
